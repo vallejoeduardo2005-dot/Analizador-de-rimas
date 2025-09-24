@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Analizador de Texto</title>
+</head>
+<body>
+    <h1>Analizador de Aliteraciones</h1>
+    <textarea id="texto-input" rows="10" cols="50"></textarea>
+    <button onclick="analizarTexto()">Analizar</button>
+    <p id="resultado"></p>
+
+    <script>
+        async function analizarTexto() {
+            const texto = document.getElementById('texto-input').value;
+            const resultadoElemento = document.getElementById('resultado');
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ texto }),
+                });
+
+                const data = await response.json();
+                resultadoElemento.innerText = data.resultado;
+            } catch (error) {
+                console.error('Error:', error);
+                resultadoElemento.innerText = 'Ocurrió un error al analizar el texto.';
+            }
+        }
+    </script>
+</body>
+</html>
