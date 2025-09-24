@@ -1,36 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Analizador de Texto</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Analizador de rimas — Con color</title>
+  <meta name="description" content="Analizador de rimas internas, consonantes y asonantes. Pegue su letra y elija modo simple o complejo." />
+  <style>
+    /* Estilos integrados (puedes extraerlos a un archivo .css si quieres) */
+    body{background:#f3f4f6;font-family:"Segoe UI", Tahoma, sans-serif;padding:24px;display:flex;align-items:flex-start;justify-content:center}
+    #analizador-container{background: rgb(249, 249, 249); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px; line-height: 1.6; margin: auto; max-width: 800px; padding: 20px;}
+    textarea{background:#fff;border-radius:4px;border:1px solid #ccc;box-sizing:border-box;color:#444;font-family:Arial,sans-serif;font-size:14px;padding:12px;resize:vertical;width:100%}
+    button{border-radius:4px;border:none;color:#fff;cursor:pointer;font-size:14px;padding:10px}
+    #simpleBtn{background: rgb(76, 175, 80);flex:1 1 0%}
+    #advancedBtn{background: rgb(33, 150, 243);flex:1 1 0%}
+    #clearBtn{background: rgb(244, 67, 54);}
+    #copyBtn{background: rgb(255, 152, 0);display:none}
+    .controls{align-items:center;display:flex;gap:8px;margin-top:12px}
+    label{color:#555;display:block;font-size:13px;margin-top:8px}
+
+    /* CAJA CON SCROLL PARA LA LETRA ANALIZADA */
+    #colorizedBox{color:black;font-family:Arial, sans-serif;margin-top:20px;background:#fff;border:1px solid #e6e6e6;border-radius:8px;padding:12px;max-height:1040px;overflow-y:auto;box-shadow:inset 0 1px 0 rgba(0,0,0,0.02);line-height:1.5;white-space:pre-wrap}
+    #colorizedBox::-webkit-scrollbar{width:10px;height:10px}
+    #colorizedBox::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:6px}
+    #colorizedBox::-webkit-scrollbar-track{background:transparent}
+    #colorizedBox{scrollbar-width:thin;scrollbar-color:rgba(0,0,0,0.12) transparent}
+  </style>
 </head>
 <body>
-    <h1>Analizador de Aliteraciones</h1>
-    <textarea id="texto-input" rows="10" cols="50"></textarea>
-    <button onclick="analizarTexto()">Analizar</button>
-    <p id="resultado"></p>
+  <div id="analizador-container">
+    <div style="color: #333333; margin-bottom: 12px; text-align:left;">
+      <span style="font-weight: normal;">Analizador de rimas internas, consonantes y asonantes.<br/></span>
+      Para multisilábica, encierra las sílabas entre paréntesis.
+    </div>
 
-    <script>
-        async function analizarTexto() {
-            const texto = document.getElementById('texto-input').value;
-            const resultadoElemento = document.getElementById('resultado');
+    <textarea id="lyricsInput" placeholder="Pegue su letra aquí..." rows="8">Nadie es dueño de nadie, me dijo alguien una vez
+Nadie puede atar los pies, ni siquiera del que te acompaña
+La mente es extraña, ayuda, pero a veces daña
+La duda deambula, qué fácil es pensar que me engaña, que me falla
+</textarea>
 
-            try {
-                const response = await fetch('/api/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ texto }),
-                });
+    <div class="controls">
+      <button id="simpleBtn">Analizar (simple)</button>
+      <button id="advancedBtn">Analizar (complejo)</button>
+      <button id="clearBtn">Borrar</button>
+    </div>
 
-                const data = await response.json();
-                resultadoElemento.innerText = data.resultado;
-            } catch (error) {
-                console.error('Error:', error);
-                resultadoElemento.innerText = 'Ocurrió un error al analizar el texto.';
-            }
-        }
-    </script>
+    <label><input checked id="fullWordCheckbox" style="margin-right:6px;" type="checkbox" /> Colorear palabra entera (solo en simple)</label>
+    <button id="copyBtn">Copiar</button>
+
+    <div id="colorizedOutput">
+      <div id="colorizedBox" role="region" aria-label="Letra analizada"></div>
+    </div>
+  </div>
+
+  <!-- Llama al script separado -->
+  <script src="/analyze.js"></script>
 </body>
 </html>
